@@ -21,10 +21,6 @@ class _DemoScreenState extends State<DemoScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
       body: ListView(
         padding: const EdgeInsets.all(8),
         children: List.generate(3, (index) => _buildUserCard()),
