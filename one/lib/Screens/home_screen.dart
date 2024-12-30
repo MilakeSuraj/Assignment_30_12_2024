@@ -12,22 +12,21 @@ class _DemoScreenState extends State<DemoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Users'),
-        leading: Icon(Icons.arrow_back),
+        title: const Text('Users'),
+        leading: const Icon(Icons.arrow_back),
         actions: [
-          Icon(Icons.search),
-          SizedBox(width: 16),
-          Icon(Icons.filter_list),
-          SizedBox(width: 16),
-          Icon(Icons.more_vert)
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () => _showFilterDrawer(context),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: ListView(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         children: List.generate(3, (index) => _buildUserCard()),
       ),
     );
@@ -35,52 +34,51 @@ class _DemoScreenState extends State<DemoScreen> {
 
   Widget _buildUserCard() {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              CircleAvatar(
-                child: Text(" H "),
-              ),
-              SizedBox(
-                width: 16,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Harsh Test",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text('HR'),
-                ],
-              ),
-              Spacer(),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'User',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Icon(Icons.more_vert),
-            ]),
-            SizedBox(
-              height: 16,
-            ),
             Row(
               children: [
-                Flexible(
+                const CircleAvatar(
+                  backgroundColor: Colors.blue,
+                  child: Text(" H "),
+                ),
+                const SizedBox(width: 16),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Harsh Test",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text('HR'),
+                  ],
+                ),
+                const Spacer(),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text(
+                    'User',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.more_vert),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                const Flexible(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -89,8 +87,14 @@ class _DemoScreenState extends State<DemoScreen> {
                     ],
                   ),
                 ),
-                SizedBox(width: 16),
-                Flexible(
+                const SizedBox(width: 16),
+                Container(
+                  width: 1,
+                  height: 50,
+                  color: Colors.grey,
+                ),
+                const SizedBox(width: 16),
+                const Flexible(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -100,9 +104,105 @@ class _DemoScreenState extends State<DemoScreen> {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Drawer opened from the right side
+  void _showFilterDrawer(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Stack(
+          children: [
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                width: 300,
+                height: MediaQuery.of(context).size.height,
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  borderRadius:
+                      BorderRadius.horizontal(left: Radius.circular(16)),
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Choose Filter',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child:
+                                  const Icon(Icons.close, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        const Divider(color: Colors.white),
+                        _buildFilterOption('Branch', ['All', 'Stemmone Works']),
+                        _buildFilterOption('Department', ['All', 'HR']),
+                        _buildFilterOption(
+                            'Reporting Manager', ['All', 'Harsh Vasoya']),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Center(child: Text('Apply')),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildFilterOption(String title, List<String> options) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style: const TextStyle(color: Colors.white, fontSize: 16)),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 12,
+            children: options.map((option) {
+              return ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                ),
+                child: Text(option),
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }
